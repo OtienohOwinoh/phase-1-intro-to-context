@@ -10,12 +10,6 @@ let createEmployeeRecord = function (row) {
     };
   };
   
-  let createEmployeeRecords = function (employeeRowData) {
-    return employeeRowData.map(function (row) {
-      return createEmployeeRecord(row);
-    });
-  };
-  
   let createTimeInEvent = function (employee, dateStamp) {
     let [date, hour] = dateStamp.split(" ");
   
@@ -27,6 +21,13 @@ let createEmployeeRecord = function (row) {
   
     return employee;
   };
+
+  let createEmployeeRecords = function (employeeRowData) {
+    return employeeRowData.map(function (row) {
+      return createEmployeeRecord(row);
+    });
+  };
+  
   
   let createTimeOutEvent = function (employee, dateStamp) {
     let [date, hour] = dateStamp.split(" ");
@@ -51,16 +52,18 @@ let createEmployeeRecord = function (row) {
   
     return (outEvent.hour - inEvent.hour) / 100;
   };
-  
-  let wagesEarnedOnDate = function (employee, dateSought) {
-    let rawWage = hoursWorkedOnDate(employee, dateSought) * employee.payPerHour;
-    return parseFloat(rawWage.toString());
-  };
-  
+
   let allWagesFor = function (employee) {
     let eligibleDates = employee.timeInEvents.map(function (e) {
       return e.date;
     });
+  
+
+
+  let wagesEarnedOnDate = function (employee, dateSought) {
+    let rawWage = hoursWorkedOnDate(employee, dateSought) * employee.payPerHour;
+    return parseFloat(rawWage.toString());
+  };
   
     let payable = eligibleDates.reduce(function (memo, d) {
       return memo + wagesEarnedOnDate(employee, d);
@@ -69,14 +72,21 @@ let createEmployeeRecord = function (row) {
     return payable;
   };
   
+  let calculatePayroll = function (arrayOfEmployeeRecords) {
+    return arrayOfEmployeeRecords.reduce(function (memo, rec) {
+      return memo + allWagesFor(rec);
+    }, 0);
+  };
+
+
   let findEmployeeByFirstName = function (srcArray, firstName) {
     return srcArray.find(function (rec) {
       return rec.firstName === firstName;
     });
   };
   
-  let calculatePayroll = function (arrayOfEmployeeRecords) {
-    return arrayOfEmployeeRecords.reduce(function (memo, rec) {
-      return memo + allWagesFor(rec);
-    }, 0);
-  };
+  
+  
+  
+  
+  
